@@ -41,12 +41,14 @@ public class Main {
 		e.printStackTrace();
 	    }
 	}
+
 	System.out.println("ボールがなくなった！");
 
-
-	for(int i=0;i<pz.getUserMonster().length;i++){
-	    if(pz.getUserMonster()[i]!=null){
-		System.out.println(pz.getUserMonster()[i]+"を捕まえた．");
+	//for(int i=0;i<pz.getUserMonster().length;i++){
+	for(int i=0;i<pz.getUserMonster().size();i++){
+	    //if(pz.getUserMonster()[i]!=null){
+	    if(pz.getUserMonster().get(i)!=null){
+		System.out.println(pz.getUserMonster().get(i)+"を捕まえた．");
 	    }
 	}
     }
