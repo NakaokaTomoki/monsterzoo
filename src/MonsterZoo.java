@@ -3,21 +3,19 @@ import java.util.stream.IntStream;
 import java.util.stream.Collectors;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.OptionalInt;
 
 
 public class MonsterZoo {
-    double distance = 0.0;//歩いた距離
-    int balls = 10;//モンスターを捕まえられるボールの数
-    int fruits = 0;//ぶつけるとモンスターが捕まえやすくなるフルーツ
+    double distance = 0.0; //歩いた距離
+    int balls = 10; //モンスターを捕まえられるボールの数
+    int fruits = 0; //ぶつけるとモンスターが捕まえやすくなるフルーツ
 
     //卵は最大9個まで持てる．卵を取得するとeggにtrueが代入され，
     //移動するたびに,eggDistanceに1.0kmずつ加算される．
     //3km移動するとランダムでモンスターが孵る
-
-    //double eggDistance[] = new double[9];
-    //boolean egg[] = new boolean[9];
     List<Double> eggDistance = Stream.generate(() -> 0.0)
 	.limit(9)
 	.collect(Collectors.toList());
@@ -27,17 +25,12 @@ public class MonsterZoo {
 	.collect(Collectors.toList());
 
     //ユーザがGetしたモンスター一覧
-    //String userMonster[] = new String[100];
-    //List<String> userMonster = new ArrayList<>(100);
     List<String> userMonster = Stream.generate(() -> "")
 	.limit(100)
 	.collect(Collectors.toList());
 
     //モンスター図鑑．モンスターの名前とレア度(0.0~9.0)がそれぞれの配列に保存されている
     //レア度が高いほうが捕まえにくい
-
-    // String monsterZukan[] = new String[22];
-    // double monsterRare[] = new double[22];
     List<String> monsterZukan =  Stream.generate(() -> "")
 	.limit(22)
 	.collect(Collectors.toList());
@@ -45,6 +38,33 @@ public class MonsterZoo {
     List<Double> monsterRare = Stream.generate(() -> 0.0)
 	.limit(22)
 	.collect(Collectors.toList());
+
+    void run(){
+	//1000ミリ秒（1秒）ずつ止まりながらpz.move()を呼び出し続ける
+	//手持ちのボールが無くなったら終了
+	while(true){
+	    try{
+		Thread.sleep(1000);
+		if(this.getBalls() > 0){
+		    this.move();
+		    System.out.println("手持ちのボールは" + this.getBalls() + "個，フルーツは" + this.getFruits() + "個");
+		    System.out.println(this.getDistance() + "km歩いた．");
+		}
+		else{
+		    break;
+		}
+	    }
+	    catch (InterruptedException e) {
+		e.printStackTrace();
+	    }
+	}
+
+	System.out.println("ボールがなくなった！");
+
+	this.getUserMonster().stream()
+	    .filter(value -> value != "")
+	    .forEach(value -> System.out.println(value + "を捕まえた．"));
+    }
 
     //呼び出すと1km distanceが増える
     void move(){
@@ -54,7 +74,7 @@ public class MonsterZoo {
 	    .filter(i -> this.egg.get(i) == true)
 	    .forEach(i -> this.eggDistance.set(i, this.eggDistance.get(i)+1));
 
-	int flg1 = (int)(Math.random()*10);//0,1の場合はズーstation，7~9の場合はモンスター
+	int flg1 = (int)(Math.random() * 10); //0,1の場合はズーstation，7~9の場合はモンスター
 
 	if(flg1 <= 1){
 	    System.out.println("ズーstationを見つけた！");
@@ -132,6 +152,28 @@ public class MonsterZoo {
 	}
     }
 
+    public void setMonsterZukan(){
+	List<String> tempMonster = Arrays.asList(
+		"イガキン", "ナマチュウ", "イノウエン", "リョージィ", "アキモトン", "ゴージマ", "チュウデン", "ヅカホン", "ニシムラー", "サコーデン", "ウッチー",
+		"ハヤッシー", "キーチー", "リョクン", "デコポン", "カミサン", "シスイ", "ジョナ", "ギダギダ", "ミッツー", "ゾエサン", "キタバー");
+
+	List<Double> tempMonsterRare = Arrays.asList(
+		9.0, 3.0, 1.0, 2.0, 5.0, 4.0, 6.0, 8.0, 7.0, 2.0, 5.0,
+		4.0, 3.0, 1.0, 6.0, 5.0, 1.0, 7.0, 2.0, 8.0, 5.0, 3.0);
+
+	this.setMonsterZukan(tempMonster);
+	this.setMonsterRare(tempMonsterRare);
+    }
+
+    private void setMonsterZukan(List<String> monsterZukan) {
+	this.monsterZukan = monsterZukan;
+    }
+
+    private void setMonsterRare(List<Double> monsterRare) {
+	this.monsterRare = monsterRare;
+    }
+
+
 
     public double getDistance() {
 	return distance;
@@ -145,16 +187,7 @@ public class MonsterZoo {
 	return fruits;
     }
 
-    //public String[] getUserMonster() {
     public List<String> getUserMonster() {
 	return userMonster;
-    }
-
-    public void setMonsterZukan(List<String> monsterZukan) {
-	this.monsterZukan = monsterZukan;
-    }
-
-    public void setMonsterRare(List<Double> monsterRare) {
-	this.monsterRare = monsterRare;
     }
 }
