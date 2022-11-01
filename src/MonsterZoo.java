@@ -77,59 +77,69 @@ public class MonsterZoo {
 	int flg1 = (int)(Math.random() * 10); //0,1の場合はズーstation，7~9の場合はモンスター
 
 	if(flg1 <= 1){
-	    System.out.println("ズーstationを見つけた！");
-	    int b = (int)(Math.random() * 3); //ball,fruits,eggがランダムに出る
-	    int f = (int)(Math.random() * 2);
-	    int e = (int)(Math.random() * 2);
-	    System.out.println("ボールを" + b + "個，" + "フルーツを" + f + "個" + "卵を" + e + "個Getした！");
-	    this.balls = this.balls + b;
-	    this.fruits = this.fruits + f;
-
-	    if(e >= 1){//卵を1つ以上Getしたら
-		     //egg[]に10個以上卵がない場合は新しい卵データをセットする
-		OptionalInt egg_is_flase = IntStream.range(0, this.eggDistance.size())
-		    .filter(i -> this.egg.get(i) == false)
-		    .findFirst();
-		egg_is_flase.ifPresent(i -> this.egg.set(i, true));
-		egg_is_flase.ifPresent(i -> this.eggDistance.set(i, 0.0));
-	    }
+	    this.moveToZooStationPhase();
 	}
 	else if(flg1 >= 7){
-	    int m = (int)(this.monsterZukan.size() * Math.random()); //monsterZukanからランダムにモンスターを出す
-	    System.out.println(this.monsterZukan.get(m) + "が現れた！");
-
-	    List<Integer> loop_range = IntStream.rangeClosed(0, 3)
-		.filter(i -> i < 3 && this.balls > 0)
-		.mapToObj(Integer::valueOf)
-		.collect(Collectors.toList());
-
-	    for(Integer i: loop_range){
-		    int r = (int)(6 * Math.random()); //0~5までの数字をランダムに返す
-
-		    if(this.fruits > 0){
-		        System.out.println("フルーツを投げた！捕まえやすさが倍になる！");
-		        this.fruits--;
-		        r = r * 2;
-		    }
-		    System.out.println(this.monsterZukan.get(m) + "にボールを投げた");
-
-		    this.balls--;
-		    if(this.monsterRare.get(m) <= r){ //monsterRare[m]の値がr以下の場合
-		        System.out.println(this.monsterZukan.get(m) + "を捕まえた！");
-
-		        IntStream.range(0, userMonster.size())
-			    .filter(j -> this.userMonster.get(j) == "")
-			    .findFirst()
-			    .ifPresent(j -> this.userMonster.set(j, this.monsterZukan.get(m)));
-
-			break; //ボール投げ終了
-		    }
-		    else{
-		        System.out.println(this.monsterZukan.get(m)+"に逃げられた！");
-		    }
-	    }
+	    this.moveToGanerateMonsterPhase();
 	}
+	this.checkEggState();
+    }
 
+    private void moveToGanerateMonsterPhase(){
+	int m = (int)(this.monsterZukan.size() * Math.random()); //monsterZukanからランダムにモンスターを出す
+	System.out.println(this.monsterZukan.get(m) + "が現れた！");
+
+	List<Integer> loop_range = IntStream.rangeClosed(0, 3)
+	    .filter(i -> i < 3 && this.balls > 0)
+	    .mapToObj(Integer::valueOf)
+	    .collect(Collectors.toList());
+
+	for(Integer i: loop_range){
+	        int r = (int)(6 * Math.random()); //0~5までの数字をランダムに返す
+
+	        if(this.fruits > 0){
+	            System.out.println("フルーツを投げた！捕まえやすさが倍になる！");
+	            this.fruits--;
+	            r = r * 2;
+	        }
+	        System.out.println(this.monsterZukan.get(m) + "にボールを投げた");
+
+	        this.balls--;
+	        if(this.monsterRare.get(m) <= r){ //monsterRare[m]の値がr以下の場合
+	            System.out.println(this.monsterZukan.get(m) + "を捕まえた！");
+
+	            IntStream.range(0, userMonster.size())
+			.filter(j -> this.userMonster.get(j) == "")
+			.findFirst()
+			.ifPresent(j -> this.userMonster.set(j, this.monsterZukan.get(m)));
+		    break; //ボール投げ終了
+		}
+		else{
+	            System.out.println(this.monsterZukan.get(m)+"に逃げられた！");
+		}
+	}
+    }
+
+    private void moveToZooStationPhase(){
+	System.out.println("ズーstationを見つけた！");
+	int b = (int)(Math.random() * 3); //ball,fruits,eggがランダムに出る
+	int f = (int)(Math.random() * 2);
+	int e = (int)(Math.random() * 2);
+	System.out.println("ボールを" + b + "個，" + "フルーツを" + f + "個" + "卵を" + e + "個Getした！");
+	this.balls = this.balls + b;
+	this.fruits = this.fruits + f;
+
+	if(e >= 1){//卵を1つ以上Getしたら
+	         //egg[]に10個以上卵がない場合は新しい卵データをセットする
+	    OptionalInt egg_is_flase = IntStream.range(0, this.eggDistance.size())
+	        .filter(i -> this.egg.get(i) == false)
+	        .findFirst();
+	    egg_is_flase.ifPresent(i -> this.egg.set(i, true));
+	    egg_is_flase.ifPresent(i -> this.eggDistance.set(i, 0.0));
+	}
+    }
+
+    private void checkEggState(){
 	List<Integer> egg_size_range = IntStream.range(0, this.egg.size())
 	    .mapToObj(Integer::valueOf)
 	    .collect(Collectors.toList());
