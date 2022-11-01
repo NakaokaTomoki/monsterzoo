@@ -39,16 +39,16 @@ public class MonsterZoo {
 	.limit(22)
 	.collect(Collectors.toList());
 
-    void run(){
+    public void run(){
 	//1000ミリ秒（1秒）ずつ止まりながらpz.move()を呼び出し続ける
 	//手持ちのボールが無くなったら終了
 	while(true){
 	    try{
 		Thread.sleep(1000);
-		if(this.getBalls() > 0){
+		if(this.balls > 0){
 		    this.move();
-		    System.out.println("手持ちのボールは" + this.getBalls() + "個，フルーツは" + this.getFruits() + "個");
-		    System.out.println(this.getDistance() + "km歩いた．");
+		    System.out.println("手持ちのボールは" + this.balls + "個，フルーツは" + this.fruits + "個");
+		    System.out.println(this.distance + "km歩いた．");
 		}
 		else{
 		    break;
@@ -61,13 +61,13 @@ public class MonsterZoo {
 
 	System.out.println("ボールがなくなった！");
 
-	this.getUserMonster().stream()
+	this.userMonster.stream()
 	    .filter(value -> value != "")
 	    .forEach(value -> System.out.println(value + "を捕まえた．"));
     }
 
     //呼び出すと1km distanceが増える
-    void move(){
+    private void move(){
 	this.distance++;
 
 	IntStream.range(0, this.egg.size())
@@ -171,23 +171,5 @@ public class MonsterZoo {
 
     private void setMonsterRare(List<Double> monsterRare) {
 	this.monsterRare = monsterRare;
-    }
-
-
-
-    public double getDistance() {
-	return distance;
-    }
-
-    public int getBalls() {
-	return balls;
-    }
-
-    public int getFruits() {
-	return fruits;
-    }
-
-    public List<String> getUserMonster() {
-	return userMonster;
     }
 }
