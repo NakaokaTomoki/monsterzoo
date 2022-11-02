@@ -16,13 +16,12 @@
 
 public class Main {
     public static void main(String[] args) {
-	MonsterZoo pz = new MonsterZoo();
+	MonsterZukan monsterZukan = new MonsterZukan();
+	monsterZukan.setMonsterZukan();
 
-	//setMonsterZukan(pz);
-	pz.setMonsterZukan();
+	MonsterZoo monsterZoo = new MonsterZoo(monsterZukan);
 
-	//1000ミリ秒（1秒）ずつ止まりながらpz.move()を呼び出し続ける
 	//手持ちのボールが無くなったら終了
-	pz.run();
+	monsterZoo.run();
     }
 }
