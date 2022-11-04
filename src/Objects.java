@@ -1,3 +1,7 @@
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
+
+
 public class Objects {
     private double distance; //歩いた距離
     private int balls; //モンスターを捕まえられるボールの数
@@ -12,8 +16,18 @@ public class Objects {
     }
 
     public void resultsPrinter(){
-	System.out.println("手持ちのボールは" + this.balls + "個，フルーツは" + this.fruits + "個");
-	System.out.println(this.distance + "km歩いた．");
+	this.Printer(Stream.of(
+		    "手持ちのボールは",
+		    String.valueOf(this.balls),
+		    "個，フルーツは",
+		    String.valueOf(this.fruits),
+		    "個"
+		    ));
+
+	this.Printer(Stream.of(
+		    String.valueOf(this.distance),
+		    "km歩いた．"
+		    ));
     }
 
     public void distanceInc(){
@@ -51,5 +65,9 @@ public class Objects {
     public void updateObjects(){
 	this.balls += this.b;
 	this.fruits += this.f;
+    }
+
+    private void Printer(Stream<String> st){
+	System.out.println(st.collect(Collectors.joining()));
     }
 }

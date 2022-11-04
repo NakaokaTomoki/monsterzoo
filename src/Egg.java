@@ -29,10 +29,13 @@ public class Egg {
     public void checkEggState(){
 	for(Integer i: generateEggRange()){
 	    if(judgeEggState(this.getEggs.get(i), this.eggDistance.get(i))){
-		System.out.println("卵が孵った！");
+		this.Printer(Stream.of("卵が孵った！"));
 		this.m = this.monsterZukan.generateRandomMonster();
 
-		System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "が産まれた！");
+		this.Printer(Stream.of(
+			    this.monsterZukan.monsterZukan.get(this.m),
+			    "が産まれた！"
+			    ));
 
 		this.monsterZukan.updateUserMonster(this.m);
 
@@ -75,5 +78,9 @@ public class Egg {
 	    .filter(i -> this.getEggs.get(i) == true)
 	    .forEach(i -> this.eggDistance.set(i, this.eggDistance.get(i)+1));
 
+    }
+
+    private void Printer(Stream<String> st){
+	System.out.println(st.collect(Collectors.joining()));
     }
 }

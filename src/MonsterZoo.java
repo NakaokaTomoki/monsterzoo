@@ -1,4 +1,4 @@
-//import java.util.stream.Stream;
+import java.util.stream.Stream;
 import java.util.stream.IntStream;
 import java.util.stream.Collectors;
 import java.util.List;
@@ -44,10 +44,12 @@ public class MonsterZoo {
     }
 
     private void resultsPrinter(){
-	System.out.println("ボールがなくなった！");
-	this.monsterZukan.userMonster.stream()
-	    .filter(value -> value != "")
-	    .forEach(value -> System.out.println(value + "を捕まえた．"));
+	this.Printer(Stream.of("ボールがなくなった！"));
+
+	this.Printerln(this.monsterZukan.userMonster.stream()
+		.filter(value -> value != "")
+		.map(value -> value + "を捕まえた．")
+		);
     }
 
     //呼び出すと1km distanceが増える
@@ -71,31 +73,40 @@ public class MonsterZoo {
 	// monsterZukanからランダムにモンスターを出す
 	this.m = this.monsterZukan.generateRandomMonster();
 
-	System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "が現れた！");
+	this.Printer(Stream.of(
+		    this.monsterZukan.monsterZukan.get(this.m),
+		    "が現れた！"));
 	//捕まえる or 3回ボールを投げるまで繰り返す
 	for(int i=0; i<3 && this.object.judgeBallsPositive(); i++){
 		this.r = this.generateRandomNumber(6);
 
 	        if(this.object.judgeFruitsPositive()){
-	            System.out.println("フルーツを投げた！捕まえやすさが倍になる！");
+	            this.Printer(Stream.of(
+				"フルーツを投げた！捕まえやすさが倍になる！"));
 		    this.object.fruitsDec();
 		    this.r *= 2;
 	        }
 
-	        System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "にボールを投げた");
+		this.Printer(Stream.of(
+			    this.monsterZukan.monsterZukan.get(this.m),
+			    "にボールを投げた"));
 
 		this.object.ballsDec();
 
 		//monsterRare[m]の値がr以下の場合
 	        if(this.judgeRareState()){
-	            System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "を捕まえた！");
+		    this.Printer(Stream.of(
+				this.monsterZukan.monsterZukan.get(this.m),
+				"を捕まえた！"));
 
 		    this.monsterZukan.updateUserMonster(this.m);
 
 		    break; //ボール投げ終了
 		}
 		else{
-	            System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "に逃げられた！");
+		    this.Printer(Stream.of(
+				this.monsterZukan.monsterZukan.get(this.m),
+				"に逃げられた！"));
 		}
 	}
     }
@@ -114,19 +125,40 @@ public class MonsterZoo {
 	int f = object.generateNewFruits();
 	int e = egg.generateNewEgg();
 
-	System.out.println("ボールを" + b + "個，" + "フルーツを" + f + "個" + "卵を" + e + "個Getした！");
+	this.Printer(Stream.of(
+		    "ボールを",
+		    String.valueOf(b),
+		    "個，",
+		    "フルーツを",
+		    String.valueOf(f),
+		    "個",
+		    "卵を",
+		    String.valueOf(e),
+		    "個Getした！"));
     }
 
     private void moveToZooStationPhase(){
-	System.out.println("ズーstationを見つけた！");
+	this.Printer(Stream.of("ズーstationを見つけた！"));
 
 	this.generateObjectAndEgg();
 	this.object.updateObjects();
 
+	this.setEggs();
+    }
+
+    private void setEggs(){
 	//卵を1つ以上Getしたら
 	if(this.egg.judgeRandomEggState()){
 	    //egg[]に10個以上卵がない場合は新しい卵データをセットする
 	    this.egg.newEggSet();
 	}
+    }
+
+    private void Printerln(Stream<String> st){
+	st.forEach(System.out::println);
+    }
+
+    private void Printer(Stream<String> st){
+	System.out.println(st.collect(Collectors.joining()));
     }
 }
