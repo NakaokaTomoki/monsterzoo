@@ -90,7 +90,7 @@ public class MonsterZoo {
 	        if(this.judgeRareState()){
 	            System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "を捕まえた！");
 
-		    this.monsterZukan.updateUserMonster(m);
+		    this.monsterZukan.updateUserMonster(this.m);
 
 		    break; //ボール投げ終了
 		}
