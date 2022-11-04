@@ -1,5 +1,5 @@
 import java.util.stream.Stream;
-//import java.util.stream.IntStream;
+import java.util.stream.IntStream;
 import java.util.stream.Collectors;
 import java.util.List;
 //import java.util.ArrayList;
@@ -20,14 +20,16 @@ public class MonsterZukan {
 	.limit(100)
         .collect(Collectors.toList());
 
-    //public MonsterZukan() {
-    //    //コンストラクタ
-    //    IntStream.range(0, 22)
-    //        .forEach(i -> this.monsterZukan.add(null));
+    public void updateUserMonster(int m){
+	IntStream.range(0, this.userMonster.size())
+	    .filter(j -> this.userMonster.get(j) == "")
+	    .findFirst()
+	    .ifPresent(j -> this.userMonster.set(j, this.monsterZukan.get(m)));
+    }
 
-    //    IntStream.range(0, 100)
-    //        .forEach(i -> this.userMonster.add(null));
-    //}
+    public int generateRandomMonster(){
+	return (int)(this.monsterZukan.size() * Math.random());
+    }
 
     public void setMonsterZukan(){
 	List<String> tempMonster = Arrays.asList(

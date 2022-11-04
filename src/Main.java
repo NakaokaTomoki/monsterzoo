@@ -13,7 +13,6 @@
 最終的にballsの値が0になると終了し，何キロ歩いたか，捕まえたモンスターは何かを表示する．
  * */
 
-
 public class Main {
     public static void main(String[] args) {
 	MonsterZukan monsterZukan = new MonsterZukan();

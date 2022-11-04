@@ -9,22 +9,37 @@ public class Egg {
     //卵は最大9個まで持てる．卵を取得するとeggにtrueが代入され，
     //移動するたびに,eggDistanceに1.0kmずつ加算される．
     //3km移動するとランダムでモンスターが孵る
-    List<Double> eggDistance = Stream.generate(() -> 0.0)
+    private List<Double> eggDistance = Stream.generate(() -> 0.0)
 	.limit(9)
 	.collect(Collectors.toList());
 
-    List<Boolean> getEggs = Stream.generate(() -> false)
+    private List<Boolean> getEggs = Stream.generate(() -> false)
 	.limit(9)
 	.collect(Collectors.toList());
 
-    MonsterZukan monsterZukan;
-
-    //int e = (int)(Math.random() * 2);
-    int e;
+    private MonsterZukan monsterZukan;
+    private int e;
+    private int m;
 
     public Egg(MonsterZukan monsterZukan) {
 	//コンストラクタ
 	this.monsterZukan = monsterZukan;
+    }
+
+    public void checkEggState(){
+	for(Integer i: generateEggRange()){
+	    if(judgeEggState(this.getEggs.get(i), this.eggDistance.get(i))){
+		System.out.println("卵が孵った！");
+		this.m = this.monsterZukan.generateRandomMonster();
+
+		System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "が産まれた！");
+
+		this.monsterZukan.updateUserMonster(this.m);
+
+		this.getEggs.set(i, false);
+		this.eggDistance.set(i, 0.0);
+	    }
+	}
     }
 
     public int generateNewEgg(){
@@ -32,31 +47,18 @@ public class Egg {
 	return this.e;
     }
 
+    public boolean judgeEggState(boolean egg, double eggDist){
+	return egg == true && eggDist >= 3;
+    }
+
     public boolean judgeRandomEggState(){
 	return this.e >= 1;
     }
 
-    public void checkEggState(){
-	List<Integer> egg_size_range = IntStream.range(0, this.getEggs.size())
+    private List<Integer> generateEggRange(){
+	return IntStream.range(0, this.getEggs.size())
 	    .mapToObj(Integer::valueOf)
 	    .collect(Collectors.toList());
-
-	for(Integer i: egg_size_range){
-	    if(this.getEggs.get(i) == true && this.eggDistance.get(i) >= 3){
-		System.out.println("卵が孵った！");
-		int m = (int)(this.monsterZukan.monsterZukan.size() * Math.random());
-
-		System.out.println(this.monsterZukan.monsterZukan.get(m) + "が産まれた！");
-
-		IntStream.range(0, this.monsterZukan.userMonster.size())
-		    .filter(j -> this.monsterZukan.userMonster.get(j) == "")
-		    .findFirst()
-		    .ifPresent(j -> this.monsterZukan.userMonster.set(j, this.monsterZukan.monsterZukan.get(m)));
-
-		this.getEggs.set(i, false);
-		this.eggDistance.set(i, 0.0);
-	    }
-	}
     }
 
     public void newEggSet(){

@@ -9,17 +9,17 @@ import java.util.List;
 
 
 public class MonsterZoo {
-    double distance = 0.0; //歩いた距離
-    int balls = 10; //モンスターを捕まえられるボールの数
-    int fruits = 0; //ぶつけるとモンスターが捕まえやすくなるフルーツ
-
-    MonsterZukan monsterZukan;
-
-    Egg egg;
+    private MonsterZukan monsterZukan;
+    private Egg egg;
+    private Objects object;
+    private int r;
+    private int m;
+    private int flg1;
 
     public MonsterZoo(MonsterZukan monsterZukan) {
 	this.monsterZukan = monsterZukan;
 	this.egg = new Egg(this.monsterZukan);
+	this.object = new Objects();
     }
 
     public void run(){
@@ -28,10 +28,9 @@ public class MonsterZoo {
 	while(true){
 	    try{
 		Thread.sleep(1000);
-		if(this.balls > 0){
+		if(this.object.judgeBallsPositive()){
 		    this.move();
-		    System.out.println("手持ちのボールは" + this.balls + "個，フルーツは" + this.fruits + "個");
-		    System.out.println(this.distance + "km歩いた．");
+		    this.object.resultsPrinter();
 		}
 		else{
 		    break;
@@ -41,9 +40,11 @@ public class MonsterZoo {
 		e.printStackTrace();
 	    }
 	}
+	this.resultsPrinter();
+    }
 
+    private void resultsPrinter(){
 	System.out.println("ボールがなくなった！");
-
 	this.monsterZukan.userMonster.stream()
 	    .filter(value -> value != "")
 	    .forEach(value -> System.out.println(value + "を捕まえた．"));
@@ -51,11 +52,11 @@ public class MonsterZoo {
 
     //呼び出すと1km distanceが増える
     private void move(){
-	this.distance++;
-
+	this.object.distanceInc();
 	this.egg.updateEggDistance();
 
-	int flg1 = (int)(Math.random() * 10); //0,1の場合はズーstation，7~9の場合はモンスター
+	//0,1の場合はズーstation，7~9の場合はモンスター
+	this.flg1 = this.generateRandomNumber(10);
 
 	if(flg1 <= 1){
 	    this.moveToZooStationPhase();
@@ -67,53 +68,63 @@ public class MonsterZoo {
     }
 
     private void moveToGanerateMonsterPhase(){
-	int m = (int)(this.monsterZukan.monsterZukan.size() * Math.random()); //monsterZukanからランダムにモンスターを出す
-	System.out.println(this.monsterZukan.monsterZukan.get(m) + "が現れた！");
+	// monsterZukanからランダムにモンスターを出す
+	this.m = this.monsterZukan.generateRandomMonster();
 
-	List<Integer> loop_range = IntStream.rangeClosed(0, 3)
-	    .filter(i -> i < 3 && this.balls > 0)
-	    .mapToObj(Integer::valueOf)
-	    .collect(Collectors.toList());
+	System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "が現れた！");
+	//捕まえる or 3回ボールを投げるまで繰り返す
+	for(int i=0; i<3 && this.object.judgeBallsPositive(); i++){
+		this.r = this.generateRandomNumber(6);
 
-	for(Integer i: loop_range){
-	        int r = (int)(6 * Math.random()); //0~5までの数字をランダムに返す
-
-	        if(this.fruits > 0){
+	        if(this.object.judgeFruitsPositive()){
 	            System.out.println("フルーツを投げた！捕まえやすさが倍になる！");
-	            this.fruits--;
-	            r = r * 2;
+		    this.object.fruitsDec();
+		    this.r *= 2;
 	        }
-	        System.out.println(this.monsterZukan.monsterZukan.get(m) + "にボールを投げた");
 
-	        this.balls--;
-	        if(this.monsterZukan.monsterRare.get(m) <= r){ //monsterRare[m]の値がr以下の場合
-	            System.out.println(this.monsterZukan.monsterZukan.get(m) + "を捕まえた！");
+	        System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "にボールを投げた");
 
-	            IntStream.range(0, this.monsterZukan.userMonster.size())
-			.filter(j -> this.monsterZukan.userMonster.get(j) == "")
-			.findFirst()
-			.ifPresent(j -> this.monsterZukan.userMonster.set(j, this.monsterZukan.monsterZukan.get(m)));
+		this.object.ballsDec();
+
+		//monsterRare[m]の値がr以下の場合
+	        if(this.judgeRareState()){
+	            System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "を捕まえた！");
+
+		    this.monsterZukan.updateUserMonster(m);
+
 		    break; //ボール投げ終了
 		}
 		else{
-	            System.out.println(this.monsterZukan.monsterZukan.get(m)+"に逃げられた！");
+	            System.out.println(this.monsterZukan.monsterZukan.get(this.m) + "に逃げられた！");
 		}
 	}
     }
 
-    private void moveToZooStationPhase(){
-	System.out.println("ズーstationを見つけた！");
-	int b = (int)(Math.random() * 3); //ball,fruits,eggがランダムに出る
-	int f = (int)(Math.random() * 2);
-	int e;
-	//int e = (int)(Math.random() * 2);
-	e = egg.generateNewEgg();
+    private boolean judgeRareState(){
+	return this.monsterZukan.monsterRare.get(this.m) <= this.r;
+    }
+
+    private int generateRandomNumber(int num){
+	//0~5までの数字をランダムに返す
+	return (int)(num * Math.random());
+    }
+
+    private void generateObjectAndEgg(){
+	int b = object.generateNewBalls();
+	int f = object.generateNewFruits();
+	int e = egg.generateNewEgg();
 
 	System.out.println("ボールを" + b + "個，" + "フルーツを" + f + "個" + "卵を" + e + "個Getした！");
-	this.balls = this.balls + b;
-	this.fruits = this.fruits + f;
+    }
 
-	if(this.egg.judgeRandomEggState()){//卵を1つ以上Getしたら
+    private void moveToZooStationPhase(){
+	System.out.println("ズーstationを見つけた！");
+
+	this.generateObjectAndEgg();
+	this.object.updateObjects();
+
+	//卵を1つ以上Getしたら
+	if(this.egg.judgeRandomEggState()){
 	    //egg[]に10個以上卵がない場合は新しい卵データをセットする
 	    this.egg.newEggSet();
 	}
