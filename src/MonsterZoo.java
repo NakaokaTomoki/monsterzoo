@@ -14,7 +14,6 @@ public class MonsterZoo {
     private Objects object;
     private int r;
     private int m;
-    private int flg1;
 
     public MonsterZoo(MonsterZukan monsterZukan) {
 	this.monsterZukan = monsterZukan;
@@ -58,7 +57,7 @@ public class MonsterZoo {
 	this.egg.updateEggDistance();
 
 	//0,1の場合はズーstation，7~9の場合はモンスター
-	this.flg1 = this.generateRandomNumber(10);
+	int flg1 = this.generateRandomNumber(10);
 
 	if(flg1 <= 1){
 	    this.moveToZooStationPhase();
