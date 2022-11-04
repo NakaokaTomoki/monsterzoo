@@ -20,6 +20,10 @@ public class MonsterZukan {
 	.limit(100)
         .collect(Collectors.toList());
 
+    public MonsterZukan() {
+	this.prepareMonsterZukan();
+    }
+
     public void updateUserMonster(int m){
 	IntStream.range(0, this.userMonster.size())
 	    .filter(j -> this.userMonster.get(j) == "")
@@ -31,24 +35,25 @@ public class MonsterZukan {
 	return (int)(this.monsterZukan.size() * Math.random());
     }
 
-    public void setMonsterZukan(){
-	List<String> tempMonster = Arrays.asList(
-		"イガキン", "ナマチュウ", "イノウエン", "リョージィ", "アキモトン", "ゴージマ", "チュウデン", "ヅカホン", "ニシムラー", "サコーデン", "ウッチー",
-		"ハヤッシー", "キーチー", "リョクン", "デコポン", "カミサン", "シスイ", "ジョナ", "ギダギダ", "ミッツー", "ゾエサン", "キタバー");
+    private void prepareMonsterZukan(){
+	this.monsterZukan = Arrays.asList(
+		"イガキン", "ナマチュウ", "イノウエン",
+		"リョージィ", "アキモトン", "ゴージマ",
+		"チュウデン", "ヅカホン", "ニシムラー",
+		"サコーデン", "ウッチー", "ハヤッシー",
+		"キーチー", "リョクン", "デコポン",
+		"カミサン", "シスイ", "ジョナ",
+		"ギダギダ", "ミッツー", "ゾエサン",
+		"キタバー");
 
-	List<Double> tempMonsterRare = Arrays.asList(
-		9.0, 3.0, 1.0, 2.0, 5.0, 4.0, 6.0, 8.0, 7.0, 2.0, 5.0,
-		4.0, 3.0, 1.0, 6.0, 5.0, 1.0, 7.0, 2.0, 8.0, 5.0, 3.0);
-
-	this.setMonsterZukan(tempMonster);
-	this.setMonsterRare(tempMonsterRare);
-    }
-
-    private void setMonsterZukan(List<String> monsterZukan) {
-	this.monsterZukan = monsterZukan;
-    }
-
-    private void setMonsterRare(List<Double> monsterRare) {
-	this.monsterRare = monsterRare;
+	this.monsterRare = Arrays.asList(
+		9.0, 3.0, 1.0,
+		2.0, 5.0, 4.0,
+		6.0, 8.0, 7.0,
+		2.0, 5.0, 4.0,
+		3.0, 1.0, 6.0,
+		5.0, 1.0, 7.0,
+		2.0, 8.0, 5.0,
+		3.0);
     }
 }

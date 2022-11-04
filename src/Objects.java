@@ -17,17 +17,11 @@ public class Objects {
 
     public void resultsPrinter(){
 	this.Printer(Stream.of(
-		    "手持ちのボールは",
-		    String.valueOf(this.balls),
-		    "個，フルーツは",
-		    String.valueOf(this.fruits),
-		    "個"
-		    ));
+		    "手持ちのボールは",String.valueOf(this.balls),
+		    "個，フルーツは", String.valueOf(this.fruits), "個"));
 
 	this.Printer(Stream.of(
-		    String.valueOf(this.distance),
-		    "km歩いた．"
-		    ));
+		    String.valueOf(this.distance), "km歩いた．"));
     }
 
     public void distanceInc(){

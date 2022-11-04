@@ -16,8 +16,6 @@
 public class Main {
     public static void main(String[] args) {
 	MonsterZukan monsterZukan = new MonsterZukan();
-	monsterZukan.setMonsterZukan();
-
 	MonsterZoo monsterZoo = new MonsterZoo(monsterZukan);
 
 	//手持ちのボールが無くなったら終了
