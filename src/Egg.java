@@ -65,11 +65,11 @@ public class Egg {
     }
 
     public void newEggSet(){
-	OptionalInt egg_is_flase = IntStream.range(0, this.eggDistance.size())
+	OptionalInt eggIsFlase = IntStream.range(0, this.eggDistance.size())
 	    .filter(i -> this.getEggs.get(i) == false)
 	    .findFirst();
-	egg_is_flase.ifPresent(i -> this.getEggs.set(i, true));
-	egg_is_flase.ifPresent(i -> this.eggDistance.set(i, 0.0));
+	eggIsFlase.ifPresent(i -> this.getEggs.set(i, true));
+	eggIsFlase.ifPresent(i -> this.eggDistance.set(i, 0.0));
 
     }
 
